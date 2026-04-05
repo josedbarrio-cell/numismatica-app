@@ -14,7 +14,11 @@ function Campo({ label, valor }) {
 export default function Detalle({ coins }) {
   const { id } = useParams()
   const nav = useNavigate()
-  const coin = coins.find(c => c.id === id)
+
+  // id en la URL es "numeroRef|era" codificado
+  const decoded = decodeURIComponent(id)
+  const [refId, era] = decoded.split('|')
+  const coin = coins.find(c => c.id === refId && c.era === era)
 
   if (!coin) return (
     <div style={{ padding:32, textAlign:'center' }}>

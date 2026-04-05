@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { IMG_URL } from '../config'
 
@@ -32,6 +32,11 @@ export default function Busqueda({ coins }) {
         .some(f => f?.toLowerCase().includes(t)))
     )
   }, [coins, era, denom, ceca, texto])
+
+  // Scroll al inicio cada vez que cambia cualquier filtro
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'smooth' })
+  }, [era, denom, ceca, texto])
 
   const sel = { width:'100%', padding:'10px 12px', borderRadius:8,
     border:'1px solid #ddd', background:'#fff', fontSize:16, marginTop:4 }
@@ -86,8 +91,8 @@ export default function Busqueda({ coins }) {
       <div style={{ padding:'0 16px' }}>
         {resultados.slice(0, 100).map(coin => (
           <div
-            key={coin.id}
-            onClick={() => nav(`/moneda/${coin.id}`)}
+            key={coin.id + coin.era}
+            onClick={() => nav(`/moneda/${encodeURIComponent(coin.id + '|' + coin.era)}`)}
             style={{
               display:'flex', gap:12, padding:'12px 0',
               borderBottom:'1px solid #f0f0f0', cursor:'pointer',
